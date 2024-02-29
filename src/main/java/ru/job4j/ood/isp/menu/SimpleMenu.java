@@ -8,25 +8,60 @@ public class SimpleMenu implements Menu {
 
     @Override
     public boolean add(String parentName, String childName, ActionDelegate actionDelegate) {
-   /*  добавьте реализацию*/
-        return  false;
+        boolean rsl = false;
+        Optional<ItemInfo> item = findItem(parentName);
+        if (Objects.equals(parentName, Menu.ROOT)) {
+            rootElements.add(new SimpleMenuItem(childName, actionDelegate));
+            rsl = true;
+        } else {
+            if (item.isPresent()) {
+                item.get().menuItem.getChildren().add(new SimpleMenuItem(childName, actionDelegate));
+                rsl = true;
+            }
+        }
+        return rsl;
     }
 
     @Override
     public Optional<MenuItemInfo> select(String itemName) {
-        /*  добавьте реализацию*/
-        return null;
+        Optional<MenuItemInfo> result = Optional.empty();
+        Optional<ItemInfo> item = findItem(itemName);
+        if (item.isPresent() && Objects.equals(item.get().menuItem.getName(), itemName)) {
+            result = Optional.of(new MenuItemInfo(item.get().menuItem, item.get().number));
+        }
+        return result;
     }
 
     @Override
     public Iterator<MenuItemInfo> iterator() {
-        /*  добавьте реализацию*/
-        return null;
+        DFSIterator dfsIterator = new DFSIterator();
+        return new Iterator<>() {
+            @Override
+            public boolean hasNext() {
+                return dfsIterator.hasNext();
+            }
+
+            @Override
+            public MenuItemInfo next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                return select(dfsIterator.next().menuItem.getName()).get();
+            }
+        };
     }
 
     private Optional<ItemInfo> findItem(String name) {
-        /*  добавьте реализацию*/
-        return null;
+        Optional<ItemInfo> rsl = Optional.empty();
+        DFSIterator iterator = new DFSIterator();
+        while (iterator.hasNext()) {
+            ItemInfo info = iterator.next();
+            if (info.menuItem.getName().equals(name)) {
+                rsl = Optional.of(info);
+                break;
+            }
+        }
+        return rsl;
     }
 
     private static class SimpleMenuItem implements MenuItem {
@@ -84,7 +119,7 @@ public class SimpleMenu implements Menu {
             String lastNumber = numbers.removeFirst();
             List<MenuItem> children = current.getChildren();
             int currentNumber = children.size();
-            for (var i = children.listIterator(children.size()); i.hasPrevious();) {
+            for (var i = children.listIterator(children.size()); i.hasPrevious(); ) {
                 stack.addFirst(i.previous());
                 numbers.addFirst(lastNumber.concat(String.valueOf(currentNumber--)).concat("."));
             }

@@ -14,7 +14,6 @@ public interface Menu extends Iterable<Menu.MenuItemInfo> {
     Optional<MenuItemInfo> select(String itemName);
 
     class MenuItemInfo {
-
         private final String name;
         private final List<String> children;
         private final ActionDelegate actionDelegate;
@@ -34,19 +33,19 @@ public interface Menu extends Iterable<Menu.MenuItemInfo> {
             this.number = number;
         }
 
-        public String getName() {
+        public String getNameInfo() {
             return name;
         }
 
-        public List<String> getChildren() {
+        public List<String> getChildrenInfo() {
             return children;
         }
 
-        public ActionDelegate getActionDelegate() {
+        public ActionDelegate getActionDelegateInfo() {
             return actionDelegate;
         }
 
-        public String getNumber() {
+        public String getNumberInfo() {
             return number;
         }
 
