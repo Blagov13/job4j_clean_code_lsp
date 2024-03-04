@@ -2,6 +2,8 @@ package ru.job4j.ood.isp.menu;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -53,5 +55,26 @@ public class SimpleMenuTest {
         assertThat(new Menu.MenuItemInfo("Тяга",
                 List.of("Штанги"), STUB_ACTION, "2."))
                 .isEqualTo(menu.select("Тяга").get());
+    }
+
+    @Test
+    public void whenOut() {
+        String LS = System.lineSeparator();
+        Menu menu = new SimpleMenu();
+        menu.add(Menu.ROOT, "Сходить в магазин", STUB_ACTION);
+        menu.add(Menu.ROOT, "Покормить собаку", STUB_ACTION);
+        menu.add("Сходить в магазин", "Купить продукты", STUB_ACTION);
+        menu.add("Купить продукты", "Купить хлеб", STUB_ACTION);
+        menu.add("Купить продукты", "Купить молоко", STUB_ACTION);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+        new Printer().print(menu);
+        String expected = new StringBuilder().
+                append("Сходить в магазин 1.").append(LS).
+                append("---Купить продукты 1.1.").append(LS).
+                append("------Купить хлеб 1.1.1.").append(LS).
+                append("------Купить молоко 1.1.2.").append(LS).
+                append("Покормить собаку 2.").append(LS).toString();
+        assertThat(expected).isEqualTo(outputStream.toString());
     }
 }
