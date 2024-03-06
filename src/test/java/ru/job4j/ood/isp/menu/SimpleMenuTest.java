@@ -59,7 +59,7 @@ public class SimpleMenuTest {
 
     @Test
     public void whenOut() {
-        String LS = System.lineSeparator();
+        String ls = System.lineSeparator();
         Menu menu = new SimpleMenu();
         menu.add(Menu.ROOT, "Сходить в магазин", STUB_ACTION);
         menu.add(Menu.ROOT, "Покормить собаку", STUB_ACTION);
@@ -70,11 +70,11 @@ public class SimpleMenuTest {
         System.setOut(new PrintStream(outputStream));
         new Printer().print(menu);
         String expected = new StringBuilder().
-                append("Сходить в магазин 1.").append(LS).
-                append("---Купить продукты 1.1.").append(LS).
-                append("------Купить хлеб 1.1.1.").append(LS).
-                append("------Купить молоко 1.1.2.").append(LS).
-                append("Покормить собаку 2.").append(LS).toString();
+                append("Сходить в магазин 1.").append(ls).
+                append("---Купить продукты 1.1.").append(ls).
+                append("------Купить хлеб 1.1.1.").append(ls).
+                append("------Купить молоко 1.1.2.").append(ls).
+                append("Покормить собаку 2.").append(ls).toString();
         assertThat(expected).isEqualTo(outputStream.toString());
     }
 }
